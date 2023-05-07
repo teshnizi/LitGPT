@@ -56,11 +56,23 @@
             flex-direction: column;
             height: 100%;
         }
+        .btn-primary {
+            background-color: #005f89;
+            border-color: #005f89;
+        }
         .custom-button {
             background-color: #005f89;
             border-color: #005f89;
         }
         .custom-button:hover {
+            background-color: #a0c5cf;
+            border-color: #a0c5cf;
+        }
+        .custom-button:disabled {
+            background-color: #a0c5cf;
+            border-color: #a0c5cf;
+        }
+        .custom-button:disabled:hover {
             background-color: #a0c5cf;
             border-color: #a0c5cf;
         }
@@ -90,6 +102,7 @@
                     Star ⭐ On Github!
                     <img src="https://github.githubassets.com/images/icons/emoji/octocat.png" alt="octocat" width="20" height="20" style="margin-left:5px;"/>
                 </button>
+
             </a>
         </div>
         </div>
@@ -99,7 +112,7 @@
         </div>
         <div class="row">
             <div class="col-12">
-            <button id="generate" class="btn btn-primary custom-button btn-block mt-1">Write the literature review!</button>
+            <button id="generate" class="btn btn-primary btn-block custom-button mt-1" disabled>Write the literature review!</button>
             </div>
         </div>
         <div class="row mt-4">
@@ -129,6 +142,60 @@
     </div>
 </body>
 <script>
+
+    // if url is "https://lit-gpt.vercel.app/", then redirect to "https://litgpt-orxmdczvdq-uw.a.run.app/"
+    if (window.location.href == "https://lit-gpt.vercel.app/") {
+        window.location.href = "https://litgpt-orxmdczvdq-uw.a.run.app/";
+    }
+    
+    var chosenModel = 'gpt-3.5-turbo';
+
+    document.getElementById('openai-key').addEventListener('input', async (event) => {
+        const key = event.target.value;
+        const generateButton = document.getElementById('generate');
+        
+        if (!key) {
+            generateButton.disabled = true;
+            generateButton.innerText = 'Invalid key!';
+            return;
+        }
+
+        console.log('getting the list...');
+        fetch('https://api.openai.com/v1/models', {
+            method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + key
+            },
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Invalid key!');
+            }
+            return response.json();
+        }).then(models => {
+            console.log(models);
+            models.data.forEach(model => {
+                console.log(model.id);
+            });
+            const gpt4Exists = models.data.some(model => model.id.includes('gpt-4'));
+
+            if (gpt4Exists) {
+                generateButton.disabled = false;
+                generateButton.innerText = 'Generate with GPT4! (~1 min)';
+                chosenModel = 'gpt-4';
+            } else {
+                generateButton.disabled = false;
+                generateButton.innerText = 'No access to GPT4 ☹️ Generate with ChatGPT!';
+                chosenModel = 'gpt-3.5-turbo';
+            }
+        }).catch(error => {
+            console.error(error);
+            generateButton.disabled = true;
+            generateButton.innerText = 'Invalid key!';
+        });
+    });
+
+    // on generate button click, generate the literature review
+
     function createCitationCard(citation) {
         // Create card elements
         const card = document.createElement('div');
@@ -178,7 +245,7 @@
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ input: inputText , key: key}),
+            body: JSON.stringify({ input: inputText , key: key, model: chosenModel}),
         })
         .then(response => response.json())
         .then(data => {
