@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LitGPT</title>
+    <!-- Add Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Add jQuery and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
+    <style>
+        html, body {
+            height: 100%;
+        }
+
+        /* use image for bg */
+        body {
+            font-family: 'EB Garamond', serif;
+            background: linear-gradient(105deg, #e6eceb, #e6eceb);
+            /* background: url('path/to/your/image.jpg') no-repeat center center fixed; */
+            color: #005f89;
+            /* background-repeat: no-repeat; */
+            background-size: cover;
+        }
+
+        .scrollable-citations {
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .container {
+            padding-top: 1rem;
+        }
+
+        .row {
+            display: flex;
+            flex-grow: 1;
+            height: 100%;
+        }
+
+        .spinner-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+
+        .form-group.full-height {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .custom-button {
+            background-color: #005f89;
+            border-color: #005f89;
+        }
+        .custom-button:hover {
+            background-color: #a0c5cf;
+            border-color: #a0c5cf;
+        }
+        .custom-button:active{
+            background-color: #005f89;
+            border-color: #005f89;
+        }   
+        /*  change  the color after click */
+        .custom-button:focus{
+            background-color: #005f89;
+            border-color: #005f89;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container pt-5 d-flex flex-column" style="height: 60%;">
+        <h1 class="text-center my-4">🔥LitGPT</h1>
+        <h5 class="text-center my-4"> The "Literature Review" part of academic papers can take a while to write, often misses some related sources, and doesn't keep up with new publications.
+            LitGPT is a proof of concept showing how AI can change the way we do literature reviews. Simply provide your paper's title and abstract to see the results! </h5>
+        <!-- center content (the single column) of the row -->
+        <div class="row justify-content-center mb-4">
+        <div class="col-4">
+            <a href="https://github.com/teshnizi/LitGPT" target="_blank">
+                <button id="github" class="btn-lg btn-warning btn-block mt-1">
+                    Star ⭐ On Github!
+                    <img src="https://github.githubassets.com/images/icons/emoji/octocat.png" alt="octocat" width="20" height="20" style="margin-left:5px;"/>
+                </button>
+            </a>
+        </div>
+        </div>
+        <div class="form-group">
+            <textarea class="form-control" id="paper-abstract" rows="3" placeholder="Title: ... &#10;Abstract:..."></textarea>
+            <textarea class="form-control mt-4" id="openai-key" rows="1" placeholder="Your OpenAI key..."></textarea>
+        </div>
+        <div class="row">
+            <div class="col-12">
+            <button id="generate" class="btn btn-primary custom-button btn-block mt-1">Write the literature review!</button>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-8">
+                <div class="form-group full-height">
+                    <textarea class="form-control" id="output" rows="3" style="height: 100%;" readonly></textarea>
+                    <div id="spinner-container" class="spinner-container" style="display: none;">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="sr-only">Generating...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 pt-4" style="background-color: #a0c5cf; border-radius: 10px; height: 100%;">                
+                <div class="scrollable-citations">
+                </div>
+            </div>
+        </div>
+        
+        <hr>
+        <div class="row">
+        <h5 class="center mb-4" style="color: #005f89; margin-bottom: 3em"> 
+            🧢 Because of the Github repo size cap, right now LitGPT only covers ML and AI papers from 2012 to 2019
+            <br>🔒 The output quality is much better with GPT-4 but the API is not publicly available yet (And it's more expensive 💸)
+            <br>📝 The number of papers is limited to 15 because of the ChatGPT context size limit. </h5>
+        </div>
+    </div>
+</body>
+<script>
+    function createCitationCard(citation) {
+        // Create card elements
+        const card = document.createElement('div');
+        const cardBody = document.createElement('div');
+        const cardTitle = document.createElement('h5');
+        const cardTitleLink = document.createElement('a');
+        const cardText = document.createElement('p');
+        const cardDate = document.createElement('p');
+
+        // Set element classes and attributes
+        card.className = 'card mb-3';
+        card.style.backgroundColor = '#e6eceb';
+        cardBody.className = 'card-body';
+        cardTitle.className = 'card-title';
+        cardText.className = 'card-text';
+        cardDate.className = 'card-text';
+        cardTitleLink.className = 'card-title-link';
+
+        // Set element contents
+        cardTitleLink.textContent = citation.id + ". " + citation.title;
+        cardTitleLink.href = citation.link;
+        cardTitle.appendChild(cardTitleLink);
+        cardText.textContent = `${citation.authors}, ${citation.year}`;
+        cardDate.textContent = citation.date;
+
+        // Assemble the card
+        cardBody.appendChild(cardTitle);
+        cardBody.appendChild(cardText);
+        cardBody.appendChild(cardDate);
+        card.appendChild(cardBody);
+
+        return card;
+    }
+
+    document.getElementById("generate").addEventListener("click", function() {
+        // Get the input value
+        const inputText = document.getElementById("paper-abstract").value;
+        const key = document.getElementById("openai-key").value;
+        
+        // Show the spinner
+        document.getElementById("spinner-container").style.display = "flex";
+        document.getElementById("output").style.display = "none";
+    
+        // Send the request to the backend
+        fetch('/generate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ input: inputText , key: key}),
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Update the output box with the generated text
+            document.getElementById("output").value = data.generated_text;
+
+            // Update the list of citations
+            const citationContainer = document.querySelector('.scrollable-citations');
+            citationContainer.innerHTML = ''; // Clear existing citations
+            console.log(data);
+            data.citations.forEach(citation => {
+                const citationCard = createCitationCard(citation);
+                citationContainer.appendChild(citationCard);
+            });
+
+            // Hide the spinner and show the output
+            document.getElementById("spinner-container").style.display = "none";
+            document.getElementById("output").style.display = "block";
+        })
+
+        .catch(error => {
+            console.error('Error:', error);
+    
+            // Hide the spinner and show an error message in the output box
+            document.getElementById("spinner-container").style.display = "none";
+            document.getElementById("output").style.display = "block";
+            document.getElementById("output").value = "An error occurred. Please try again.";
+        });
+    });
+    </script>
+    
+</html>
