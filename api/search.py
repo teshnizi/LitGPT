@@ -20,14 +20,13 @@ global_idx = 0
 
 # if not os.path.exists('api/database/papers_all.npy'):
 for f in files:
-    if f.startswith('papers_202'):
-        continue
     print(f"Loading file {f}...")
     papers = np.load(folder + f, allow_pickle=True).item()
     papers = {global_idx + idx: papers[idx] for idx in papers}
     db.update(papers)
     global_idx += len(papers)
 
+assert len(global_idx)>0, "No papers found in the database! Please run get_data.py first"
 # np.save('api/database/papers_all.npy', db)
 
 # else:
