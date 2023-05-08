@@ -1,5 +1,9 @@
 
+
+
 # 🔥 LitGPT
+
+Demo: [litgpt.xyz](http://litgpt.xyz)
 
 The "Literature Review" part of academic papers can take a while to write, often misses some related sources, and doesn't keep up with new publications. LitGPT is a proof of concept showing how AI can change the way we do literature reviews. Simply provide your paper's title and abstract to see the results!
 
