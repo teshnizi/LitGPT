@@ -89,7 +89,6 @@
     </style>
 </head>
 <body>
-
     <div class="container pt-5 d-flex flex-column" style="height: 60%;">
         <h1 class="text-center my-4">🔥LitGPT</h1>
         <h5 class="text-center my-4"> The "Literature Review" section of academic papers can be time-consuming to write,
@@ -98,10 +97,9 @@
         <div class="col-4">
             <a href="https://github.com/teshnizi/LitGPT" target="_blank">
                 <button id="github" class="btn-lg btn-warning btn-block mt-1">
-                    Star ⭐ On Github!
-                    <img src="https://github.githubassets.com/images/icons/emoji/octocat.png" alt="octocat" width="20" height="20" style="margin-left:5px;"/>
+                     The code's available on Github!
+                     ⭐ <img src="https://github.githubassets.com/images/icons/emoji/octocat.png" alt="octocat" width="20" height="20" style="margin-left:5px;"/>
                 </button>
-
             </a>
         </div>
         </div>
@@ -114,8 +112,8 @@
             <button id="generate" class="btn btn-primary btn-block custom-button mt-1" disabled>Write the literature review!</button>
             </div>
         </div>
-        <div class="row mt-4">
-            <div class="col-md-8">
+        <div class="row mt-4 mb-4">
+            <div class="col-8">
                 <div class="form-group full-height">
                     <textarea class="form-control" id="output" rows="3" style="height: 100%;" readonly></textarea>
                     <div id="spinner-container" class="spinner-container" style="display: none;">
@@ -125,20 +123,23 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 pt-4" style="background-color: #a0c5cf; border-radius: 10px; height: 100%;">                
+            <div class="col-4 pt-4" style="background-color: #a0c5cf; border-radius: 10px; height: 100%;">
                 <div class="scrollable-citations">
                 </div>
+            </div>
+            <div class="col-12 mt-4">
+                <h6 class="center mb-4" style="color: #005f89; margin-bottom: 3em"> 
+                    📚 Right now LitGPT only covers ML and AI papers submitted on arxiv from Jan 2011 to May 2023 (281035 papers). 🗓️
+                    <br>🚀 The output quality is better with GPT-4 if your API_Key has access to it. 🔑💸
+                    <br>📝 LitGPT only uses titles and abstracts. The output quality is significantly better with the whole paper text, but the data must be extracted from PDF files and will take up much more space and memory. 💾
+                    <br>🧢 The number of papers is capped to 15 for ChatGPT and 25 for GPT-4. </h6>
             </div>
         </div>
         
         <hr>
-        <div class="row">
-        <h6 class="center mb-4" style="color: #005f89; margin-bottom: 3em"> 
-            📚 Right now LitGPT only covers ML and AI papers submitted on arxiv from Jan 2011 to May 2023 (281035 papers). 🗓️
-            <br>🚀 The output quality is better with GPT-4 if your API_Key has access to it. 🔑💸
-            <br>📝 LitGPT only uses titles and abstracts. The output quality is significantly better with the whole paper text, but the data must be extracted from PDF files and will take up much more space and memory. 💾
-            <br>🧢 The number of papers is capped to 15 for ChatGPT and 25 for GPT-4. </h6>
-        </div>
+        <!-- <div class="row mt-4">
+        
+        </div> -->
     </div>
 </body>
 <script>
@@ -275,6 +276,5 @@
             document.getElementById("output").value = "An error occurred. Please try again.";
         });
     });
-    </script>
-    
+    </script>    
 </html>

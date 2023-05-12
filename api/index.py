@@ -3,10 +3,18 @@ from api.search import get_relevant_papers, generate_literature
 from flask import render_template
 from flask import jsonify
 from flask import request
+from flask import current_app
+import numpy as np
 import openai
 
+# def init_app_context(app):
+    # with app.app_context():
+    #     app.paper_ids = np.load('api/data/paper_ids.npy', allow_pickle=True).item()
+    #     app.emb_matrix = np.load('api/data/emb_matrix.npy', allow_pickle=True)
+    
 app = Flask(__name__)
-
+# init_app_context(app)
+        
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -38,12 +46,11 @@ def about():
         num_papers = 25
         
     try:
-        id_list = get_relevant_papers(query_title, query_abstract, key, num_papers)
+        id_list = get_relevant_papers(query_title, query_abstract, key, emb_matrix=current_app.emb_matrix, num_papers=num_papers)
     except Exception as e:
         return jsonify({'generated_text': "One of the inputs is invalid! Is your API key correct?", 'citations': []})
     
-    
-    lit, citations = generate_literature(query_title, query_abstract, id_list, key, model)
+    lit, citations = generate_literature(query_title, query_abstract, id_list, key, paper_ids=current_app.paper_ids, model=model)
     return jsonify({'generated_text': lit, 'citations': citations})
     
 
