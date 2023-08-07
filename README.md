@@ -7,6 +7,12 @@ The "Literature Review" part of academic papers can take a while to write, often
 - 📄 LitGPT only uses titles and abstracts. The output quality is significantly better with the whole paper text, but the data should be extracted from pdf files and take much more space and memory 💾
 - 🔢 The number of papers is limited to 15 for ChatGPT and 25 for GPT-4 📊
 
+## Demo:
+
+
+https://github.com/teshnizi/LitGPT/assets/48642434/ab361bd3-66eb-4f73-94d6-017a6c7c9a5f
+
+
 ## Running Locally
 
 - To get the paper data (might take a while, I can't upload the data because of github size limits)
